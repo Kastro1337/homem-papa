@@ -37,6 +37,9 @@ class Game:
     def draw_grid(self):
         for x in range(WIDTH//CELL_WIDTH): # width/width/28
             pygame.draw.line(self.screen, GREY, (x*CELL_WIDTH,0), (x*CELL_WIDTH,HEIGHT))
+        for x in range(HEIGHT//CELL_HEIGHT):
+            pygame.draw.line(self.screen, GREY, (0, x*CELL_HEIGHT), (WIDTH, x*CELL_HEIGHT))
+
 
     def update(self):
         pass
