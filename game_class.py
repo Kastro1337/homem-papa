@@ -20,9 +20,7 @@ class Game:
 
     def run(self):
         while self.running:
-            self.events()
-            self.draw()
-            self.clock.tick(FPS) # delta time in unity c#
+            self.update()
         pygame.quit()
         sys.exit()
 
@@ -31,6 +29,11 @@ class Game:
             # the right way to do it
             if event.type == pygame.QUIT:
                 self.running = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key in MOVE_KEYS:
+                    self.player.move(event.key)
+
 
     # Load the background
     # And resize it
@@ -46,12 +49,15 @@ class Game:
 
 
     def update(self):
-        pass
+        self.events()
+        self.draw()
+        self.player.update()
+        self.clock.tick(FPS) # delta time in unity c#
 
     # Draw everything on screen
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (0,TOP_BUFFER))
-        self.draw_grid()
+        #self.draw_grid()
         self.player.draw(self.screen)
         pygame.display.update()
