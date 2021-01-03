@@ -5,6 +5,7 @@
 import sys
 import pygame
 from settings import *
+from player_class import *
 
 
 class Game:
@@ -13,6 +14,9 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True # makes the game go *BRRRRRR*
         self.load() # load back gorund
+        self.player = Player(PLAYER_STARTING_POS)
+        print(self.player.grid_pos)
+
 
     def run(self):
         while self.running:
@@ -32,13 +36,13 @@ class Game:
     # And resize it
     def load(self):
         self.background = pygame.image.load('labirintite.png')
-        self.background = pygame.transform.scale(self.background, (WIDTH, HEIGHT))
+        self.background = pygame.transform.scale(self.background, (MAZE_WIDTH, MAZE_HEIGHT))
 
     def draw_grid(self):
         for x in range(WIDTH//CELL_WIDTH): # width/width/28
-            pygame.draw.line(self.screen, GREY, (x*CELL_WIDTH,0), (x*CELL_WIDTH,HEIGHT))
+            pygame.draw.line(self.background, GREY, (x*CELL_WIDTH,0), (x*CELL_WIDTH,HEIGHT))
         for x in range(HEIGHT//CELL_HEIGHT):
-            pygame.draw.line(self.screen, GREY, (0, x*CELL_HEIGHT), (WIDTH, x*CELL_HEIGHT))
+            pygame.draw.line(self.background, GREY, (0, x*CELL_HEIGHT), (WIDTH, x*CELL_HEIGHT))
 
 
     def update(self):
@@ -46,6 +50,8 @@ class Game:
 
     # Draw everything on screen
     def draw(self):
-        self.screen.blit(self.background, (0,0))
+        self.screen.fill(BLACK)
+        self.screen.blit(self.background, (0,TOP_BUFFER))
         self.draw_grid()
+        self.player.draw(self.screen)
         pygame.display.update()
