@@ -36,7 +36,7 @@ class Game:
 
 
     # Load the background
-    # And resize it
+    # And resizes it
     def load(self):
         self.background = pygame.image.load('labirintite.png')
         self.background = pygame.transform.scale(self.background, (MAZE_WIDTH, MAZE_HEIGHT))
@@ -52,12 +52,13 @@ class Game:
         self.events()
         self.draw()
         self.player.update()
-        self.clock.tick(FPS) # delta time in unity c#
+        self.clock.tick(FPS) # higher the fps, higher the speed
+                             # sdds do delta.time do unity
 
     # Draw everything on screen
     def draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (0,TOP_BUFFER))
-        #self.draw_grid()
+        self.draw_grid()
         self.player.draw(self.screen)
         pygame.display.update()

@@ -12,7 +12,8 @@ class Player:
         self.grid_pos = pos
         self.corrected_pos = self.get_pos()
 
-        self.direction = Vector2(0,0)
+        self.direction = Vector2(1,0)
+        self.stored_dir = Vector2(0,0)
 
     def get_pos(self):
         #   do the calculation to consider the top margin and size of each cell
@@ -22,22 +23,45 @@ class Player:
 
     def move(self, key):
         if key == MOVE_KEYS[0]:     # right
-            self.direction = Vector2(1,0)
+            self.stored_dir = Vector2(1,0)
+
 
         elif key == MOVE_KEYS[1]:   # left
-            self.direction = Vector2(-1,0)
+            self.stored_dir = Vector2(-1,0)
 
         elif key == MOVE_KEYS[2]:   # up
-            self.direction = Vector2(0,-1)
+            self.stored_dir = Vector2(0,-1)
 
         else:                        # down
-            self.direction = Vector2(0,1)
+            self.stored_dir = Vector2(0,1)
 
+
+    def update(self):
+        self.corrected_pos += self.direction
+        self.lock_to_grid()
+
+
+    def lock_to_grid(self):
+        #   Lock the player to the grid
+        #   supostamente...
+
+
+
+        print("corrected_pos:",self.corrected_pos)
+        print("cell_height:",CELL_HEIGHT)
+        print((self.corrected_pos.y+TOP_BUFFER) % CELL_HEIGHT)
+
+        # Horizontal
+        if self.corrected_pos.x % CELL_WIDTH == CELL_HEIGHT//2: # ???? COMO ISSO FUNCIONA
+            if self.stored_dir == Vector2(0,1) or self.stored_dir == Vector2(0,-1):
+                self.direction = self.stored_dir
+
+        #Vertical
+        if (self.corrected_pos.y) % CELL_HEIGHT == CELL_WIDTH//2:
+            if self.stored_dir == Vector2(1,0) or self.stored_dir == Vector2(-1,0):
+                self.direction = self.stored_dir
 
     def draw(self, screen):
         #   Draw on screen the player's circle,
         #   with the corrected position and the diameter proportional to a quadrant
         pygame.draw.circle(screen, YELLOW, (self.corrected_pos.x, self.corrected_pos.y), CELL_WIDTH/2)
-
-    def update(self):
-        self.corrected_pos += self.direction
