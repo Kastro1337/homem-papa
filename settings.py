@@ -5,7 +5,7 @@ from pygame.math import Vector2
 import pygame
 
 # game settings
-PLAYER_STARTING_POS = Vector2(2,1)
+PLAYER_STARTING_POS = Vector2(1,1)
 FPS = 60 # only with RTX 3090
 MOVE_KEYS = [
             pygame.K_RIGHT, # right
@@ -14,10 +14,19 @@ MOVE_KEYS = [
             pygame.K_DOWN   # down
              ]
 
+DEBUG_KEYS = [
+            pygame.K_1,     # draw grids
+            pygame.K_2,     # draw walls
+            pygame.K_3,     # draw player pos
+
+]
+
 # color customization
 GREY = (110, 110, 110)
 BLACK = (0,0,0)
 YELLOW = (255, 255, 0)
+PINK = (112,55,163)
+RED = (255,0,0)
 
 # screen settings
 TOP_BUFFER = 20 # space between the maze and the windows screen
