@@ -1,7 +1,7 @@
 from settings import *
 import pygame
 from pygame import Vector2
-from maze_data import walls
+from maze_data import walls, coins
 
 
 
@@ -16,6 +16,7 @@ class Player:
         self.direction = Vector2(0,0)
         self.stored_dir = Vector2(0,0)
         self.able_to_move = True
+        self.score = 0
 
 
     def get_pos(self):
@@ -39,6 +40,17 @@ class Player:
             self.stored_dir = Vector2(0,1)
 
 
+    def can_move(self):
+        # Check if there is no walls on the path ahead
+        for each_wall in walls:
+            #print("grid_pos = ",self.grid_pos)
+            #print("direction =",self.direction)
+            #print("wall =", each_wall)
+            if Vector2(self.grid_pos + self.direction) == each_wall: # TODO: comment this one
+                return False
+        return True
+
+
     def lock_to_grid(self):
         #   Lock the player to the grid
         #   supostamente...
@@ -53,16 +65,6 @@ class Player:
             if self.stored_dir == Vector2(1,0) or self.stored_dir == Vector2(-1,0):
                 self.direction = self.stored_dir
 
-
-    def can_move(self):
-        # Check if there is no walls on the path ahead
-        for each_wall in walls:
-            #print("grid_pos = ",self.grid_pos)
-            #print("direction =",self.direction)
-            #print("wall =", each_wall)
-            if Vector2(self.grid_pos + self.direction) == each_wall: # TODO: comment this one
-                return False
-        return True
 
     def change_grid_pos(self):
         # change grid position in reference of pixel position
@@ -84,10 +86,19 @@ class Player:
         elif self.direction == Vector2(0,-1): # up
             self.grid_pos[0] = (self.pixel_pos[0]+CELL_WIDTH//2)//CELL_WIDTH -1
             self.grid_pos[1] = (self.pixel_pos[1] - TOP_BUFFER +CELL_HEIGHT//2)//CELL_HEIGHT
-
         # thats complex AF
         # to regulate grid_pos, you need to change the "drag" of the position
         # depending on where the player is moving towards
+
+
+    def on_coin(self):
+        # if the player is on the same cell as a coin
+        # the coin will dissapear
+        if self.grid_pos in coins:
+            coins.remove(self.grid_pos)
+            return True
+
+
 
 
 
@@ -99,6 +110,8 @@ class Player:
             #self.grid
         self.lock_to_grid()
         self.able_to_move = self.can_move()
+        if self.on_coin():
+            self.score += 1
 
 
 

@@ -27,6 +27,7 @@ BLACK = (0,0,0)
 YELLOW = (255, 255, 0)
 PINK = (112,55,163)
 RED = (255,0,0)
+GOLDEN = (212, 175, 55)
 
 # screen settings
 TOP_BUFFER = 20 # space between the maze and the windows screen

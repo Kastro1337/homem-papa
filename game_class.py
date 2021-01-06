@@ -6,7 +6,7 @@ import sys
 import pygame
 from settings import *
 from player_class import *
-from maze_data import walls
+from maze_data import walls, coins
 
 
 class Game:
@@ -25,6 +25,7 @@ class Game:
     def run(self):
         while self.running:
             self.update()
+        print("score:",self.player.score) #TODOD: DELETE THIS
         pygame.quit()
         sys.exit()
 
@@ -50,6 +51,11 @@ class Game:
 
 
 
+    def draw_coins(self):
+        # Draw the coins based on the maze map
+        # simple way, no fancy pants
+        for each_coin in coins:
+            pygame.draw.circle(self.screen, GOLDEN, ((each_coin.x*CELL_WIDTH)+CELL_WIDTH//2, ((each_coin.y*CELL_HEIGHT)+CELL_HEIGHT//2)+TOP_BUFFER),CELL_WIDTH//5 )
 
     def draw_grid(self):
         for x in range(WIDTH//CELL_WIDTH): # width/width/28
@@ -64,7 +70,6 @@ class Game:
     def draw_player_position(self):
         pygame.draw.rect(self.screen, RED, (int(self.player.grid_pos.x*CELL_WIDTH),int(self.player.grid_pos.y*CELL_HEIGHT+TOP_BUFFER),CELL_WIDTH,CELL_HEIGHT), 1)
 
-
     def debug_mode(self, key):
         # turns debbuging on and off
         if key == DEBUG_KEYS[0]:
@@ -75,12 +80,11 @@ class Game:
             self.player_debug = True if self.player_debug == False else False
 
 
+
     def update(self):
         self.events()
         self.draw()
         self.player.update()
-        #print(self.player.grid_pos)
-
         self.clock.tick(FPS) # higher the fps, higher the speed
                              # sdds do delta.time do unity
 
@@ -94,5 +98,6 @@ class Game:
             self.draw_grid()
         if self.player_debug:
             self.draw_player_position()
+        self.draw_coins()
         self.player.draw(self.screen)
         pygame.display.update()
