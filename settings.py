@@ -25,15 +25,19 @@ DEBUG_KEYS = [
 GREY = (110, 110, 110)
 BLACK = (0,0,0)
 YELLOW = (255, 255, 0)
-PINK = (112,55,163)
+PURPLE = (112,55,163)
+PINK = (255,105,180)
+ORANGE = (255,140,0)
+CYAN = (0,255,255)
 RED = (255,0,0)
 GOLDEN = (212, 175, 55)
 
 # screen settings
-TOP_BUFFER = 20 # space between the maze and the windows screen
+TOP_BUFFER = 40 # space between the maze and the windows screen
 MAZE_WIDTH = 560
 MAZE_HEIGHT = 620
 WIDTH = MAZE_WIDTH
 HEIGHT = MAZE_HEIGHT + TOP_BUFFER
 CELL_WIDTH = MAZE_WIDTH//28     # =20
 CELL_HEIGHT = MAZE_HEIGHT//30   # =20
+BACKGROUND = None

@@ -10,9 +10,12 @@ from settings import *
 
 
 class Enemy:
-    def __init__(self,pos):
+    def __init__(self, pos, number):
         self.grid_pos = pos
         self.pixel_pos = self.get_pixel_pos()
+        self.radius = CELL_WIDTH/2.5
+        self.number = number
+        self.color = self.get_color()
 
 
     def get_pixel_pos(self):
@@ -21,8 +24,19 @@ class Enemy:
         y = self.grid_pos.y*CELL_HEIGHT+TOP_BUFFER + (CELL_HEIGHT//2)
         return Vector2(x,y)
 
+    def get_color(self):
+        if self.number == 0:
+            return RED
+        elif self.number == 1:
+            return PINK
+        elif self.number == 2:
+            return CYAN
+        else:
+            return ORANGE
+
     def update(self):
         pass
 
     def draw(self, screen):
-        pygame.draw.circle(screen, RED, (self.pixel_pos.x, self.pixel_pos.y), CELL_WIDTH/2.5 )
+        #print(self.color)
+        pygame.draw.circle(screen, self.color, (self.pixel_pos.x, self.pixel_pos.y), self.radius )

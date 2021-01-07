@@ -55,11 +55,12 @@ class Game:
         # could load other things if needed
         self.background = pygame.image.load('labirintite.png')
         self.background = pygame.transform.scale(self.background, (MAZE_WIDTH, MAZE_HEIGHT))
+        BACKGROUND = self.background # just to draw black 2 tiles
 
     def make_enemies(self):
         # pass the initial conditions for the instance of enemy object
-        for each_enemy_pos in enemies_pos:
-            self.enemies.append(Enemy(each_enemy_pos))
+        for enemy_number, each_enemy_pos in enumerate(enemies_pos):
+            self.enemies.append(Enemy(each_enemy_pos, enemy_number))
 
 
 
@@ -77,7 +78,7 @@ class Game:
 
     def draw_walls(self):
         for wall in self.walls:
-            pygame.draw.rect(self.screen, PINK, (wall.x*CELL_WIDTH, wall.y* CELL_HEIGHT+TOP_BUFFER, CELL_WIDTH,CELL_HEIGHT))
+            pygame.draw.rect(self.screen, PURPLE, (wall.x*CELL_WIDTH, wall.y* CELL_HEIGHT+TOP_BUFFER, CELL_WIDTH,CELL_HEIGHT))
 
     def draw_player_position(self):
         pygame.draw.rect(self.screen, RED, (int(self.player.grid_pos.x*CELL_WIDTH),int(self.player.grid_pos.y*CELL_HEIGHT+TOP_BUFFER),CELL_WIDTH,CELL_HEIGHT), 1)
@@ -90,7 +91,6 @@ class Game:
             self.wall_debug = True if self.wall_debug == False else False
         elif key == DEBUG_KEYS[2]:
             self.player_debug = True if self.player_debug == False else False
-
 
 
     def update(self):
