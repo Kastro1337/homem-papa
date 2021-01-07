@@ -80,8 +80,10 @@ class Game:
         for wall in self.walls:
             pygame.draw.rect(self.screen, PURPLE, (wall.x*CELL_WIDTH, wall.y* CELL_HEIGHT+TOP_BUFFER, CELL_WIDTH,CELL_HEIGHT))
 
-    def draw_player_position(self):
+    def draw_entities_position(self):
         pygame.draw.rect(self.screen, RED, (int(self.player.grid_pos.x*CELL_WIDTH),int(self.player.grid_pos.y*CELL_HEIGHT+TOP_BUFFER),CELL_WIDTH,CELL_HEIGHT), 1)
+        for each_enemy in self.enemies:
+            pygame.draw.rect(self.screen, RED, (int(each_enemy.grid_pos.x*CELL_WIDTH), int(each_enemy.grid_pos.y*CELL_HEIGHT+TOP_BUFFER), CELL_WIDTH, CELL_HEIGHT), 1)
 
     def debug_mode(self, key):
         # turns debbuging on and off
@@ -97,6 +99,8 @@ class Game:
         self.events()
         self.draw()
         self.player.update()
+        for each_enemy in self.enemies:
+            each_enemy.update()
         self.clock.tick(FPS) # higher the fps, higher the speed
                              # sdds do delta.time do unity
 
@@ -109,7 +113,7 @@ class Game:
         if self.grid_debug:
             self.draw_grid()
         if self.player_debug:
-            self.draw_player_position()
+            self.draw_entities_position()
         self.draw_coins()
         self.player.draw(self.screen)
         for each_enemy in self.enemies:

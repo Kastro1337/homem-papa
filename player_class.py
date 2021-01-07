@@ -1,5 +1,5 @@
 from settings import *
-import pygame
+from pygame.draw import circle as circle_draw
 from pygame import Vector2
 from maze_data import walls, coins
 
@@ -43,9 +43,6 @@ class Player:
     def can_move(self):
         # Check if there is no walls on the path ahead
         for each_wall in walls:
-            #print("grid_pos = ",self.grid_pos)
-            #print("direction =",self.direction)
-            #print("wall =", each_wall)
             if Vector2(self.grid_pos + self.direction) == each_wall: # TODO: comment this one
                 return False
         return True
@@ -105,11 +102,11 @@ class Player:
 
     def update(self):
         if self.able_to_move:
-            self.pixel_pos += self.direction
+            self.pixel_pos += self.direction # actual moving
         self.change_grid_pos()
-            #self.grid
         self.lock_to_grid()
         self.able_to_move = self.can_move()
+
         if self.on_coin():
             self.score += 1
 
@@ -120,4 +117,4 @@ class Player:
     def draw(self, screen):
         #   Draw on screen the player's circle,
         #   with the corrected position and the diameter proportional to a quadrant
-        pygame.draw.circle(screen, YELLOW, (self.pixel_pos.x, self.pixel_pos.y), CELL_WIDTH/2)
+        circle_draw(screen, YELLOW, (self.pixel_pos.x, self.pixel_pos.y), CELL_WIDTH/2)

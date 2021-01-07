@@ -5,7 +5,7 @@
 
 from settings import *
 from pygame import Vector2
-from pygame import draw
+
 
 
 # just for stetics porpose on maze_array
