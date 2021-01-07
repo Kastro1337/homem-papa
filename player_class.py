@@ -12,14 +12,14 @@ class Player:
         #   Receives the position and modifies it, to be in one quadrant/sector
         #   considering the margin and the size of the cells that divide the map
         self.grid_pos = pos
-        self.pixel_pos = self.get_pos()
+        self.pixel_pos = self.get_pixel_pos()
         self.direction = Vector2(0,0)
         self.stored_dir = Vector2(0,0)
         self.able_to_move = True
         self.score = 0
 
 
-    def get_pos(self):
+    def get_pixel_pos(self):
         #   do the calculation to consider the top margin and size of each cell
         x = self.grid_pos.x*CELL_WIDTH + (CELL_WIDTH//2)
         y = self.grid_pos.y*CELL_HEIGHT+TOP_BUFFER + (CELL_HEIGHT//2)
