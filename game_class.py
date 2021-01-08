@@ -39,6 +39,7 @@ class Game:
 
     def events(self):
         for event in pygame.event.get():
+
             # the right way to do it
             if event.type == pygame.QUIT:
                 self.running = False
@@ -48,6 +49,7 @@ class Game:
                     self.player.move(event.key)
                 elif event.key in DEBUG_KEYS:
                     self.debug_mode(event.key)
+
 
     def load(self):
         # Load the background
@@ -60,7 +62,7 @@ class Game:
     def make_enemies(self):
         # pass the initial conditions for the instance of enemy object
         for enemy_number, each_enemy_pos in enumerate(enemies_pos):
-            self.enemies.append(Enemy(each_enemy_pos, enemy_number))
+            self.enemies.append(Enemy(self, each_enemy_pos, enemy_number))
 
 
 
@@ -99,6 +101,7 @@ class Game:
         self.events()
         self.draw()
         self.player.update()
+
         for each_enemy in self.enemies:
             each_enemy.update()
         self.clock.tick(FPS) # higher the fps, higher the speed

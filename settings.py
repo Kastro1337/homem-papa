@@ -5,7 +5,7 @@ from pygame.math import Vector2
 import pygame
 
 # game settings
-PLAYER_STARTING_POS = Vector2(1,1)
+PLAYER_STARTING_POS = Vector2(13,15)
 FPS = 60 # only with RTX 3090
 MOVE_KEYS = [
             pygame.K_RIGHT, # right
@@ -36,8 +36,13 @@ GOLDEN = (212, 175, 55)
 TOP_BUFFER = 40 # space between the maze and the windows screen
 MAZE_WIDTH = 560
 MAZE_HEIGHT = 620
+
 WIDTH = MAZE_WIDTH
 HEIGHT = MAZE_HEIGHT + TOP_BUFFER
-CELL_WIDTH = MAZE_WIDTH//28     # =20
-CELL_HEIGHT = MAZE_HEIGHT//30   # =20
+
+CELL_WIDTH_NUMBER = 28
+CELL_HEIGHT_NUMBER = 30
+CELL_WIDTH = MAZE_WIDTH//CELL_WIDTH_NUMBER     # =20
+CELL_HEIGHT = MAZE_HEIGHT//CELL_HEIGHT_NUMBER   # =20
+
 BACKGROUND = None

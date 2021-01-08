@@ -13,14 +13,16 @@ from maze_data import walls
 
 
 class Enemy:
-    def __init__(self, pos, number):
+    def __init__(self, game, pos, number):
+        self.game = game
         self.grid_pos = pos
         self.pixel_pos = self.get_pixel_pos()
         self.radius = CELL_WIDTH/2.5
         self.number = number
         self.personality, self.color = self.set_personality()
-        self.direction = Vector2(0,0)
+        self.direction = Vector2(0 ,0)
         self.stored_dir = Vector2(0, 0)
+        self.timer = 0
 
         self.able_to_move = True
 
@@ -46,8 +48,17 @@ class Enemy:
 
 
     def move(self):
-        if self.personality == "randomy":
+
+        self.timer +=1
+        next_pos = Vector2(self.grid_pos.x + self.direction.x, self.grid_pos.y + self.direction.y)
+        if next_pos in walls:
             self.direction = self.get_random_direction()
+            self.timer = 0
+
+        if self.timer == 0 or self.timer >= 60:
+            self.direction = self.get_random_direction()
+            self.timer = 0
+
 
     def get_random_direction(self):
         while True: # not the best of practices
