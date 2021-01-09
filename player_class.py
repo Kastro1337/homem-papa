@@ -1,16 +1,17 @@
 from settings import *
 from pygame.draw import circle as circle_draw
 from pygame import Vector2
-from maze_data import walls, coins
+from maze_data import *
 
 
 
 #   The player class.
 #   you cant go anywhere without this
 class Player:
-    def __init__(self, pos):
+    def __init__(self, game, pos):
         #   Receives the position and modifies it, to be in one quadrant/sector
         #   considering the margin and the size of the cells that divide the map
+        self.game = game
         self.grid_pos = pos
         self.pixel_pos = self.get_pixel_pos()
         self.direction = Vector2(0,0)
@@ -21,8 +22,8 @@ class Player:
 
     def get_pixel_pos(self):
         #   do the calculation to consider the top margin and size of each cell
-        x = self.grid_pos.x*CELL_WIDTH + (CELL_WIDTH//2)
-        y = self.grid_pos.y*CELL_HEIGHT+TOP_BUFFER + (CELL_HEIGHT//2)
+        x = self.grid_pos[0]*CELL_WIDTH + (CELL_WIDTH//2)
+        y = self.grid_pos[1]*CELL_HEIGHT+TOP_BUFFER + (CELL_HEIGHT//2)
         return Vector2(x,y)
 
 
@@ -53,14 +54,15 @@ class Player:
         #   supostamente...
 
         # Horizontal
-        if self.pixel_pos.x % CELL_WIDTH == CELL_HEIGHT//2: # ???? COMO ISSO FUNCIONA
+        if self.pixel_pos[0] % CELL_WIDTH == CELL_HEIGHT//2: # ???? COMO ISSO FUNCIONA
             if self.stored_dir == Vector2(0,1) or self.stored_dir == Vector2(0,-1):
                 self.direction = self.stored_dir
 
         #Vertical
-        if (self.pixel_pos.y) % CELL_HEIGHT == CELL_WIDTH//2:
+        if (self.pixel_pos[1]) % CELL_HEIGHT == CELL_WIDTH//2:
             if self.stored_dir == Vector2(1,0) or self.stored_dir == Vector2(-1,0):
                 self.direction = self.stored_dir
+
 
 
     def change_grid_pos(self):
@@ -91,8 +93,8 @@ class Player:
     def on_coin(self):
         # if the player is on the same cell as a coin
         # the coin will dissapear
-        if self.grid_pos in coins:
-            coins.remove(self.grid_pos)
+        if self.grid_pos in self.game.coins:
+            self.game.coins.remove(self.grid_pos)
             return True
 
 
@@ -117,4 +119,4 @@ class Player:
     def draw(self, screen):
         #   Draw on screen the player's circle,
         #   with the corrected position and the diameter proportional to a quadrant
-        circle_draw(screen, YELLOW, (self.pixel_pos.x, self.pixel_pos.y), CELL_WIDTH/2)
+        circle_draw(screen, YELLOW, (self.pixel_pos[0], self.pixel_pos[1]), CELL_WIDTH/2)

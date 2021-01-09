@@ -54,7 +54,7 @@ maze_array = [
 ]
 
 walls = [] # walls coordenates
-coins = [] # coins coordenates
+#coins = [] # coins coordenates
 enemies_pos = [] # enemies coordenates
 
 # creating coordenates for entities in maze_array
@@ -62,10 +62,16 @@ for y, line in enumerate(maze_array):  # y
     for x, char in enumerate(line):    # x
         if char == 1:
             walls.append(Vector2(x, y))
-        elif char == C:
-            coins.append(Vector2(x, y))
         elif char in enemy_chars:
-            enemies_pos.append(Vector2(x, y))
+            enemies_pos.append([x,y])
+
+def get_coins():
+    lista = []
+    for y, line in enumerate(maze_array):  # y
+        for x, char in enumerate(line):    # x
+            if char == C:
+                lista.append(Vector2(x, y))
+    return lista
 
 
 # obs: enumerate() returns an number and an element of the sequence

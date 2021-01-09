@@ -24,6 +24,7 @@ class Enemy:
         self.stored_dir = Vector2(0, 0)
         self.timer = 0
 
+
         self.able_to_move = True
 
 
@@ -32,8 +33,8 @@ class Enemy:
 
     def get_pixel_pos(self):
         #   do the calculation to consider the top margin and size of each cell
-        x = self.grid_pos.x*CELL_WIDTH + (CELL_WIDTH//2)
-        y = self.grid_pos.y*CELL_HEIGHT+TOP_BUFFER + (CELL_HEIGHT//2)
+        x = self.grid_pos[0]*CELL_WIDTH + (CELL_WIDTH//2)
+        y = self.grid_pos[1]*CELL_HEIGHT+TOP_BUFFER + (CELL_HEIGHT//2)
         return Vector2(x,y)
 
     def set_personality(self):
@@ -50,7 +51,9 @@ class Enemy:
     def move(self):
 
         self.timer +=1
-        next_pos = Vector2(self.grid_pos.x + self.direction.x, self.grid_pos.y + self.direction.y)
+        next_pos = Vector2(self.grid_pos[0] + self.direction[0], self.grid_pos[1] + self.direction[1])
+
+
         if next_pos in walls:
             self.direction = self.get_random_direction()
             self.timer = 0
@@ -73,16 +76,16 @@ class Enemy:
                 dir =  Vector2(0,-1)
 
             #next_pos = dir + self.grid_pos # calculate the supposed next position
-            next_pos = Vector2(self.grid_pos.x + dir.x, self.grid_pos.y + dir.y)
+            next_pos = Vector2(self.grid_pos[0] + dir[0], self.grid_pos[1] + dir[1])
             if next_pos not in walls: # check if there is no walls on the path ahead
                 break
         return dir
 
     def time_to_move(self):
-        if int(self.pixel_pos.x) % CELL_WIDTH == 10:
+        if int(self.pixel_pos[0]) % CELL_WIDTH == 10:
             if self.direction == Vector2(1, 0) or self.direction == Vector2(-1, 0)  or self.direction == Vector2(0, 0):
                 return True
-        if int(self.pixel_pos.y+TOP_BUFFER//2) % CELL_HEIGHT == 10:
+        if int(self.pixel_pos[1]+TOP_BUFFER//2) % CELL_HEIGHT == 10:
             if self.direction == Vector2(0, 1) or self.direction == Vector2(0, -1)  or self.direction == Vector2(0, 0):
                 return True
         return False
@@ -92,7 +95,6 @@ class Enemy:
         self.grid_pos[1] = (self.pixel_pos[1] - TOP_BUFFER)//CELL_HEIGHT
 
 
-
     def update(self):
         self.pixel_pos += self.direction
         if self.time_to_move():
@@ -100,10 +102,13 @@ class Enemy:
         self.change_grid_pos()
 
 
-
+    def on_player(self, player):
+        if self.grid_pos == player.grid_pos:
+            return True
+        return False
 
 
 
 
     def draw(self, screen):
-        circle_draw(screen, self.color, (self.pixel_pos.x, self.pixel_pos.y), self.radius )
+        circle_draw(screen, self.color, (self.pixel_pos[0], self.pixel_pos[1]), self.radius )

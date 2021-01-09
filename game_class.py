@@ -4,10 +4,11 @@
 #
 import sys
 import pygame
+import copy
 from settings import *
 from player_class import *
 from enemy_class import *
-from maze_data import walls, coins, enemies_pos
+from maze_data import *
 
 
 class Game:
@@ -16,12 +17,14 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True # makes the game go *BRRRRRR*
         self.load() # load back gorund
+        self.state = "game"
 
-        self.player = Player(PLAYER_STARTING_POS)
+        self.player = Player(self, copy.copy(PLAYER_STARTING_POS))
         self.enemies = []
+        self.enemies_starting_pos = []
         self.make_enemies()
         self.walls = walls
-        self.coins = coins
+        self.coins = get_coins()
 
         self.grid_debug = False
         self.wall_debug = False
@@ -32,23 +35,31 @@ class Game:
         # keep the gaming going
         # call the functions in the game
         while self.running:
-            self.update()
-        print("score:",self.player.score) #TODOD: DELETE THIS
+            if self.state == "game":
+                self.game_update()
+            elif self.state == "game-over":
+                self.over_update()
         pygame.quit()
         sys.exit()
 
-    def events(self):
+    def game_events(self):
         for event in pygame.event.get():
 
             # the right way to do it
             if event.type == pygame.QUIT:
                 self.running = False
 
+
             if event.type == pygame.KEYDOWN:
                 if event.key in MOVE_KEYS:
                     self.player.move(event.key)
                 elif event.key in DEBUG_KEYS:
                     self.debug_mode(event.key)
+
+
+
+
+
 
 
     def load(self):
@@ -62,7 +73,8 @@ class Game:
     def make_enemies(self):
         # pass the initial conditions for the instance of enemy object
         for enemy_number, each_enemy_pos in enumerate(enemies_pos):
-            self.enemies.append(Enemy(self, each_enemy_pos, enemy_number))
+            self.enemies_starting_pos.append( each_enemy_pos)
+            self.enemies.append(Enemy(self, copy.copy(each_enemy_pos), enemy_number))
 
 
 
@@ -83,9 +95,9 @@ class Game:
             pygame.draw.rect(self.screen, PURPLE, (wall.x*CELL_WIDTH, wall.y* CELL_HEIGHT+TOP_BUFFER, CELL_WIDTH,CELL_HEIGHT))
 
     def draw_entities_position(self):
-        pygame.draw.rect(self.screen, RED, (int(self.player.grid_pos.x*CELL_WIDTH),int(self.player.grid_pos.y*CELL_HEIGHT+TOP_BUFFER),CELL_WIDTH,CELL_HEIGHT), 1)
+        pygame.draw.rect(self.screen, RED, (int(self.player.grid_pos[0]*CELL_WIDTH),int(self.player.grid_pos[1]*CELL_HEIGHT+TOP_BUFFER),CELL_WIDTH,CELL_HEIGHT), 1)
         for each_enemy in self.enemies:
-            pygame.draw.rect(self.screen, RED, (int(each_enemy.grid_pos.x*CELL_WIDTH), int(each_enemy.grid_pos.y*CELL_HEIGHT+TOP_BUFFER), CELL_WIDTH, CELL_HEIGHT), 1)
+            pygame.draw.rect(self.screen, RED, (int(each_enemy.grid_pos[0]*CELL_WIDTH), int(each_enemy.grid_pos[1]*CELL_HEIGHT+TOP_BUFFER), CELL_WIDTH, CELL_HEIGHT), 1)
 
     def debug_mode(self, key):
         # turns debbuging on and off
@@ -97,18 +109,32 @@ class Game:
             self.player_debug = True if self.player_debug == False else False
 
 
-    def update(self):
-        self.events()
-        self.draw()
+    def game_update(self):
+        self.clock.tick(FPS) # higher the fps, higher the speed
+        self.game_events()
+        self.game_draw()
         self.player.update()
-
         for each_enemy in self.enemies:
             each_enemy.update()
-        self.clock.tick(FPS) # higher the fps, higher the speed
-                             # sdds do delta.time do unity
 
-    # Draw everything on screen
-    def draw(self):
+            if each_enemy.on_player(self.player):
+                self.state = "game-over"
+                #self.player.grid_pos = copy.copy(PLAYER_STARTING_POS)
+                self.player.grid_pos = Vector2(PLAYER_STARTING_POS)
+                self.player.pixel_pos = self.player.get_pixel_pos()
+                self.player.direction *= 0
+                for index, each_enemy in enumerate(self.enemies):
+                    each_enemy.grid_pos = copy.copy(self.enemies_starting_pos[index])
+                    each_enemy.pixel_pos = each_enemy.get_pixel_pos()
+                    each_enemy.direction *= 0
+                self.coins = get_coins()
+
+
+
+
+
+
+    def game_draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (0,TOP_BUFFER))
         if self.wall_debug:
@@ -121,4 +147,31 @@ class Game:
         self.player.draw(self.screen)
         for each_enemy in self.enemies:
             each_enemy.draw(self.screen)
+        pygame.display.update()
+
+
+    def over_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+
+
+            if event.type == pygame.KEYDOWN:
+                if event.key in RETURN_KEY:
+                    self.state = "game"
+
+                elif event.key in ESCAPE_KEY:
+                    self.running = False
+
+
+    def over_update(self):
+        self.clock.tick(FPS)
+        self.over_events()
+        self.over_draw()
+
+
+    def over_draw(self):
+        self.screen.fill(BLACK)
+        self.screen.blit(self.screen, (0,TOP_BUFFER))
+
         pygame.display.update()
