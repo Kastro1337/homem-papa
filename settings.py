@@ -39,6 +39,7 @@ ORANGE = (255,140,0)
 CYAN = (0,255,255)
 RED = (255,0,0)
 GOLDEN = (212, 175, 55)
+WHITE = (255, 255, 255)
 
 # screen settings
 TOP_BUFFER = 40 # space between the maze and the windows screen

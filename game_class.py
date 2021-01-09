@@ -10,6 +10,8 @@ from player_class import *
 from enemy_class import *
 from maze_data import *
 
+pygame.init()
+
 
 class Game:
     def __init__(self):
@@ -77,12 +79,21 @@ class Game:
             self.enemies.append(Enemy(self, copy.copy(each_enemy_pos), enemy_number))
 
 
+    def draw_text(self, words, screen, pos, centered = False,  size = 18, colour = WHITE, font_name= "arial black"):
+        font = pygame.font.SysFont(font_name, size)
+        text = font.render(words, False, colour)
+        text_size = text.get_size()
+        if centered:
+            pos[0] = pos[0]-text_size[0]//2
+            pos[1] = pos[1]-text_size[1]//2
+        screen.blit(text, pos)
 
     def draw_coins(self):
         # Draw the coins based on the maze map
         # simple way, no fancy pants
         for each_coin in self.coins:
             pygame.draw.circle(self.screen, GOLDEN, ((each_coin.x*CELL_WIDTH)+CELL_WIDTH//2, ((each_coin.y*CELL_HEIGHT)+CELL_HEIGHT//2)+TOP_BUFFER),CELL_WIDTH//5 )
+
 
     def draw_grid(self):
         for x in range(WIDTH//CELL_WIDTH): # width/width/28
@@ -119,15 +130,7 @@ class Game:
 
             if each_enemy.on_player(self.player):
                 self.state = "game-over"
-                #self.player.grid_pos = copy.copy(PLAYER_STARTING_POS)
-                self.player.grid_pos = Vector2(PLAYER_STARTING_POS)
-                self.player.pixel_pos = self.player.get_pixel_pos()
-                self.player.direction *= 0
-                for index, each_enemy in enumerate(self.enemies):
-                    each_enemy.grid_pos = copy.copy(self.enemies_starting_pos[index])
-                    each_enemy.pixel_pos = each_enemy.get_pixel_pos()
-                    each_enemy.direction *= 0
-                self.coins = get_coins()
+                self.restart()
 
 
 
@@ -137,6 +140,8 @@ class Game:
     def game_draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (0,TOP_BUFFER))
+        self.draw_text(f"SCORE: {self.player.score}", self.screen, [60, 0])
+
         if self.wall_debug:
             self.draw_walls()
         if self.grid_debug:
@@ -173,5 +178,21 @@ class Game:
     def over_draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.screen, (0,TOP_BUFFER))
+        quit_text = "Press the escape button to QUIT"
+        again_text = "Press ENTER to PLAY AGAIN"
+        self.draw_text("GAME OVER", self.screen, [WIDTH//2, 100], True)
+        self.draw_text(again_text, self.screen, [WIDTH//2, HEIGHT//2], True)
+        self.draw_text(quit_text, self.screen, [WIDTH//2, HEIGHT//1.5], True)
 
         pygame.display.update()
+
+    def restart(self):
+        self.player.grid_pos = Vector2(PLAYER_STARTING_POS)
+        self.player.pixel_pos = self.player.get_pixel_pos()
+        self.player.direction *= 0
+        self.player.score = 0
+        for index, each_enemy in enumerate(self.enemies):
+            each_enemy.grid_pos = copy.copy(self.enemies_starting_pos[index])
+            each_enemy.pixel_pos = each_enemy.get_pixel_pos()
+            each_enemy.direction *= 0
+        self.coins = get_coins()
