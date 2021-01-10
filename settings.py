@@ -7,6 +7,10 @@ import pygame
 # game settings
 PLAYER_STARTING_POS = [13,15]
 FPS = 60 # only with RTX 3090
+
+# All the keys, made that way, so
+# you can modify to any key (you are welcome)
+
 MOVE_KEYS = [
             pygame.K_RIGHT, # right
             pygame.K_LEFT,  # left
@@ -22,11 +26,11 @@ DEBUG_KEYS = [
 ]
 
 RETURN_KEY = [
-            pygame.K_RETURN # just the return key, but you still can modify it
+            pygame.K_RETURN
 ]
 
 ESCAPE_KEY = [
-            pygame.K_ESCAPE # just the escape key, but you still can modify it
+            pygame.K_ESCAPE
 ]
 
 # color customization
@@ -42,6 +46,7 @@ GOLDEN = (212, 175, 55)
 WHITE = (255, 255, 255)
 
 # screen settings
+# dont touch any of this, proprabily will break the game
 TOP_BUFFER = 40 # space between the maze and the windows screen
 MAZE_WIDTH = 560
 MAZE_HEIGHT = 620
@@ -53,5 +58,3 @@ CELL_WIDTH_NUMBER = 28
 CELL_HEIGHT_NUMBER = 30
 CELL_WIDTH = MAZE_WIDTH//CELL_WIDTH_NUMBER     # =20
 CELL_HEIGHT = MAZE_HEIGHT//CELL_HEIGHT_NUMBER   # =20
-
-BACKGROUND = None
