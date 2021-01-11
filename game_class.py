@@ -65,7 +65,7 @@ class Game:
         # Load the background
         # And resizes it
         # could load other things if needed
-        self.background = pygame.image.load('labirintite.png')
+        self.background = pygame.image.load('labirinto.png')
         self.background = pygame.transform.scale(self.background, (MAZE_WIDTH, MAZE_HEIGHT))
 
 
